@@ -8,7 +8,6 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('taches')
       table.string('etat')
-      table.string('nom')
       table.integer('user_id').unsigned().references('id').inTable('users')
       table.integer('projet_id').unsigned().references('id').inTable('projets')
       table.timestamp('created_at', { useTz: true }).defaultTo(this.now())

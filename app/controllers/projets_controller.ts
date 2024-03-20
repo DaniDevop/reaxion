@@ -14,7 +14,7 @@ export default class ProjetsController {
   /**
    * Display form to create a new record
    */
-  async create({ }: HttpContext) { }
+  async create({}: HttpContext) {}
 
   /**
    * Handle form submission for the create action
@@ -73,6 +73,6 @@ export default class ProjetsController {
    */
   async destroy({ params }: HttpContext) {
 
-    
+
    }
 }
