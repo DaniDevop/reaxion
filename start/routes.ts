@@ -9,13 +9,19 @@
 
 import router from '@adonisjs/core/services/router'
 
-import UsersController from '#controllers/users_controller'
+const UsersController = () => import('#controllers/users_controller')
 
 router.get('/', async () => 'Hello wordl!')
 
 router.get('/usersAll', [UsersController, 'index'])
 
+router.get('/userFind/:id', [UsersController, 'show'])
 
 router.post('/createUser', [UsersController, 'store'])
+
+router.put('/updateUser', [UsersController, 'update'])
+//
+
+
 
 export default router
