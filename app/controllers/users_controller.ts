@@ -15,27 +15,7 @@ export default class UsersController {
   /**
    * Handle form submission for the create action
    */
-  async store({ auth, request, response }: HttpContext) {
-    try {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { email, nom, role, passwords } = request.body()
 
-      const password = await bcrypt.hash(passwords, 10)
-
-      const newUser = await User.create({
-        nom,
-        email,
-        role,
-        password,
-      })
-
-      const token = await User.accessTokens.create(newUser)
-
-      return response.status(200).json({ data: token, user: newUser })
-    } catch (error) {
-      return response.status(500).json({ data: error.message })
-    }
-  }
 
   /**
    * Show individual record
@@ -94,10 +74,7 @@ export default class UsersController {
     }
   }
 
-  async function login(request,response):HttpContext
-  {
-   const user={nom:request.input('nom'),password:request.password}
-  }
+
 
   /**
    * Delete record

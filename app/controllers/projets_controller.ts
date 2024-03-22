@@ -5,8 +5,7 @@ export default class ProjetsController {
   /**
    * Display a list of resource
    */
-  async index({ request, response }: HttpContext) {
-
+  async index({ response }: HttpContext) {
     const ProjetAll = await Projet.all()
     return response.status(200).json({ data: ProjetAll })
   }
@@ -51,7 +50,7 @@ export default class ProjetsController {
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) { }
+  async edit({ params }: HttpContext) {}
 
   /**
    * Handle form submission for the edit action
@@ -61,18 +60,10 @@ export default class ProjetsController {
       const projet = await Projet.find(request.input('id'))
       projet.projet = request.input('projet')
       projet.etat = request.input('etat')
-      await projet.save();
+      await projet.save()
       return response.status(200).json({ message: 'Projet modifiée avec succes', data: projet })
     } catch (error) {
       return response.status(500).json({ message: 'Une erreur est survenue dans le code' })
     }
   }
-
-  /**
-   * Delete record
-   */
-  async destroy({ params }: HttpContext) {
-
-
-   }
 }

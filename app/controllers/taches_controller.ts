@@ -13,18 +13,14 @@ export default class TachesController {
   /**
    * Display form to create a new record
    */
-  async create({ }: HttpContext) { }
 
-  /**
-   * Handle form submission for the create action
-   */
   async store({ request, response }: HttpContext) {
 
 
 
     try {
       const taches = new Tache();
-      taches.user_id = request.input('user_id')
+      taches.user_id = request.input( 'user_id')
       taches.projet_id = request.input('projet_id')
       taches.taches = request.input('taches')
       taches.etat = request.input('etat')
