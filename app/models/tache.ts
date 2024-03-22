@@ -23,7 +23,7 @@ export default class Tache extends BaseModel {
   declare user: relations.BelongsTo<typeof User>
 
   @column()
-  declare projet: relations.BelongsTo<typeof Projet>  
+  declare projet: relations.BelongsTo<typeof Projet>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

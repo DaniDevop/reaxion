@@ -24,8 +24,6 @@ router.post('/loginUser', [AuthController, 'login'])
 
 router
   .group(() => {
-
-
     router.get('/usersAll', [UsersController, 'index'])
     router.get('/userFind/:id', [UsersController, 'show'])
 

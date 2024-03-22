@@ -1,34 +1,21 @@
+import { UserService } from '#services/user_service';
 import bcrypt from 'bcryptjs'
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
+import { inject } from '@adonisjs/core'
 
+import { UserData } from '../utils/utils.js'
+@inject()
 export default class AuthController {
+  constructor(private userService: UserService) {}
 
-
-
-
-
-  
-  async login({ auth, response, request }): HttpContext {
+  async login({ response, request }: HttpContext) {
     try {
       const { email, password } = request.body()
 
-      const user = await User.findBy('email', email)
+      const result = await this.userService.login(email, password)
 
-      if (!user) {
-        return response.status(404).json({ message: 'User not found' })
-      }
-
-      const isMatch = await bcrypt.compare(password, user.password)
-
-      if (!isMatch) {
-        return response.status(401).json({ message: 'Informations introuvable' })
-      }
-
-
-      const token = await User.accessTokens.create(user)
-
-      return response.status(200).json({ data: token, user: user })
+      return response.status(result.code).json({ data: result })
     } catch (error) {
       return response.status(500).json({ data: error.message })
     }
@@ -36,21 +23,14 @@ export default class AuthController {
 
   async register({ request, response }: HttpContext) {
     try {
-      const { email, nom, role, passwords } = request.body()
+      const { email, nom, role, password } = request.body()
+      const data: UserData = { email, nom, role, password }
+      const result = await this.userService.createUser(data)
 
-      const password = await bcrypt.hash(passwords, 10)
-
-      const newUser = await User.create({
-        nom,
-        email,
-        role,
-        password,
-      })
-
-
-      return response.status(200).json({ r: token, user: newUser })
+      return response.status(result.code).json({ message: result.response, data: result.data })
     } catch (error) {
-      return response.status(402).json({ data: error.message })
+      console.error(error)
+      return response.status(500).json({ message: 'ERRO :' + error })
     }
   }
 }

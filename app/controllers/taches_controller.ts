@@ -1,13 +1,24 @@
 import Tache from '#models/tache'
+import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
+import { TachesData } from '../utils/utils.js'
+import TachesServices from '#services/taches.services'
 
+@inject()
 export default class TachesController {
   /**
    * Display a list of resource
    */
-  async index({ request, response }: HttpContext) {
-    const tachesAll = await Tache.all()
-    return response.status(200).json({ data: tachesAll })
+
+
+  constructor(private tachesService: TachesServices) {}
+  async index({ response }: HttpContext) {
+    try {
+      const datas = await this.tachesService.getAllTaches()
+      return response.status(datas.code).json({ data: datas.response })
+    } catch (error) {
+      return response.status(500).json({ message: error })
+    }
   }
 
   /**
@@ -15,36 +26,19 @@ export default class TachesController {
    */
 
   async store({ request, response }: HttpContext) {
-
-
-
     try {
-      const taches = new Tache();
-      taches.user_id = request.input( 'user_id')
-      taches.projet_id = request.input('projet_id')
-      taches.taches = request.input('taches')
-      taches.etat = request.input('etat')
-      await taches.save()
-      return response.status(200).json({ message: 'Taches crée avec succes', data: taches })
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { taches, etat, user_id, projet_id } = request.body()
+      const tachesSave: TachesData = { taches, etat, user_id, projet_id }
+      const result = await this.tachesService.createTaches(tachesSave)
+
+      return response.status(result.code).json({ message: result.response, data: result.data })
     } catch (error) {
       return response.status(400).json({ message: 'Erreur taches non crée' })
-
     }
   }
 
-  /**
-   * Show individual record
-   */
-  async show({ params }: HttpContext) { }
 
-  /**
-   * Edit individual record
-   */
-  async edit({ params }: HttpContext) { }
-
-  /**
-   * Handle form submission for the edit action
-   */
   async update({ response, request }: HttpContext) {
     try {
       const taches = await Tache.find(request.input('id'))
@@ -69,7 +63,7 @@ export default class TachesController {
     try {
       const taches = await Tache.find(request.param('id'))
       if (!taches) {
-        return response.status(400).json({ message: 'Taches introuvable'})
+        return response.status(400).json({ message: 'Taches introuvable' })
       }
       await taches.delete()
       return response.status(200).json({ message: 'Taches delete avec succes', data: taches })

@@ -1,13 +1,24 @@
 import Projet from '#models/projet'
+import ProjetService from '#services/projet_.service'
+import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
+import { ProjetData } from '../utils/utils.js'
 
+@inject()
 export default class ProjetsController {
   /**
    * Display a list of resource
    */
+
+  constructor(private ProjetService: ProjetService) {}
+
   async index({ response }: HttpContext) {
-    const ProjetAll = await Projet.all()
-    return response.status(200).json({ data: ProjetAll })
+    try {
+      const result = await this.ProjetService.getAllProjet()
+      return response.status(result.code).json({ data: result.data })
+    } catch (error) {
+      return response.status(500).json({ error: error })
+    }
   }
 
   /**
@@ -20,11 +31,13 @@ export default class ProjetsController {
    */
   async store({ request, response }: HttpContext) {
     try {
-      const projet = new Projet()
-      projet.projet = request.input('projet')
-      projet.etat = request.input('etat')
-      await projet.save()
-      return response.status(200).json({ message: 'Projet crée avec succes', data: projet })
+      const { projet, etat } = request.body()
+      const projets: ProjetData = { projet, etat }
+      const result = await this.ProjetService.createTaches(projets)
+
+      return response
+        .status(result.code)
+        .json({ message: 'Projet crée avec succes', data: result.data })
     } catch (error) {
       return response.status(404).json({ error: error.message })
     }
@@ -35,35 +48,25 @@ export default class ProjetsController {
    */
   async show({ request, response }: HttpContext) {
     try {
-      const projet = await Projet.find(request.param('id'))
+      const result = await this.ProjetService.findProjetById(request.input('id'))
 
-      if (!projet) {
-        return response.status(404).json({ error: 'Projet not found' })
-      }
-
-      return response.status(200).json({ data: projet })
+      return response.status(result.code).json({ data: result.data })
     } catch (error) {
       return response.status(404).json({ error: 'Projet not found' })
     }
   }
 
-  /**
-   * Edit individual record
-   */
-  async edit({ params }: HttpContext) {}
-
-  /**
-   * Handle form submission for the edit action
-   */
   async update({ response, request }: HttpContext) {
     try {
-      const projet = await Projet.find(request.input('id'))
-      projet.projet = request.input('projet')
-      projet.etat = request.input('etat')
-      await projet.save()
-      return response.status(200).json({ message: 'Projet modifiée avec succes', data: projet })
+      const { projet, etat } = request.body()
+      const projets: ProjetData = { projet, etat }
+      const result = await this.ProjetService.udateProjet(projets, request.input('id'))
+
+      return response
+        .status(result.code)
+        .json({ message: 'Projet crée avec succes', data: result.data })
     } catch (error) {
-      return response.status(500).json({ message: 'Une erreur est survenue dans le code' })
+      return response.status(404).json({ error: error.message })
     }
   }
 }
