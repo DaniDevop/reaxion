@@ -2,6 +2,10 @@ import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import * as relations from '@adonisjs/lucid/types/relations'
 import Tache from './tache.js'
+import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
+import { before } from 'node:test'
+import hash from '@adonisjs/core/services/hash'
+import { Hash } from '@adonisjs/core/hash'
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
@@ -16,6 +20,10 @@ export default class User extends BaseModel {
   @column()
   declare piece_identity: string
 
+
+  @column()
+  declare email: string
+
   @column()
   declare taches: relations.HasMany<typeof Tache>
 
@@ -24,5 +32,15 @@ export default class User extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
-  email: any
+
+
+
+
+  static accessTokens = DbAccessTokensProvider.forModel(User, {
+    expiresIn: '30 days',
+    prefix: 'oat_',
+    table: 'auth_access_tokens',
+    type: 'auth_token',
+    tokenSecretLength: 40,
+  })
 }

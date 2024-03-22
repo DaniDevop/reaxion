@@ -53,6 +53,7 @@
     "@adonisjs/auth": "^9.1.1",
     "@adonisjs/core": "^6.2.2",
     "@adonisjs/lucid": "^20.4.0",
+    "@vinejs/vine": "^1.8.0",
     "bcryptjs": "^2.4.3",
     "luxon": "^3.4.4",
     "mysql2": "^3.9.2",

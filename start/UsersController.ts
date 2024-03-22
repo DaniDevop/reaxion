@@ -1,4 +1,4 @@
 import router from '@adonisjs/core/services/router';
-const UsersController = () => import('#controllers/users_controller')
 
+const UsersController = () => import('#controllers/users_controller');
 router.post('/createUser', [UsersController, 'store']);

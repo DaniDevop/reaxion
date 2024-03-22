@@ -18,10 +18,9 @@ const UsersController = () => import('#controllers/users_controller')
 router.get('/', async () => 'Hello wordl!')
 
 router.get('/usersAll', [UsersController, 'index'])
-
 router.get('/userFind/:id', [UsersController, 'show'])
-
 router.post('/createUser', [UsersController, 'store'])
+router.post('/uploadUser', [UsersController, 'uploadFile'])
 
 router.put('/updateUser', [UsersController, 'update'])
 
