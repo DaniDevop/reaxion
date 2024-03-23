@@ -1,4 +1,4 @@
-import { UserService } from '#services/user_service';
+import { UserService } from '#services/user_service'
 import bcrypt from 'bcryptjs'
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -32,5 +32,16 @@ export default class AuthController {
       console.error(error)
       return response.status(500).json({ message: 'ERRO :' + error })
     }
+  }
+
+  async findUserByNameOrEmail({ request, response }: HttpContext) {
+    try {
+      const { nameOrEmail } = request.body()
+      const tachesAll = await this.userService.findTachesToUser(nameOrEmail)
+
+      return response
+        .status(tachesAll.code)
+        .json({ message: tachesAll.response, data: tachesAll.data })
+    } catch (error) {}
   }
 }

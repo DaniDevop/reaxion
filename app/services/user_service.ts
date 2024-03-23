@@ -5,6 +5,7 @@ import { UserData } from '../utils/utils.js'
 
 import { MultipartFile } from '@adonisjs/core/bodyparser'
 import app from '@adonisjs/core/services/app'
+import Tache from '#models/tache'
 
 export class UserService {
   async getAllUser() {
@@ -101,6 +102,20 @@ export class UserService {
       return { response: token, code: 201 }
     } catch (error) {
       return { response: 'Une erreur c est produite  ', code: 500 }
+    }
+  }
+  async findTachesToUser(data: string) {
+    try {
+      const userTachesAll = await User.query().where('email', data).orWhere('nom', data).first()
+      if (!userTachesAll) {
+        return { response: 'Utilisateur introuvable', code: 404 }
+      }
+
+      const tachesAll = await userTachesAll.load('taches')
+
+      return { response: 'Ok', data: tachesAll, code: 200 }
+    } catch (error) {
+      return { response: error, code: 400 }
     }
   }
 }
