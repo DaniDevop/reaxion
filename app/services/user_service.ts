@@ -5,8 +5,8 @@ import { UserData } from '../utils/utils.js'
 
 import { MultipartFile } from '@adonisjs/core/bodyparser'
 import app from '@adonisjs/core/services/app'
-import { inject } from '@adonisjs/core'
-
+import db from '@adonisjs/lucid/services/db'
+import { dateColumn } from '@adonisjs/lucid/orm'
 export class UserService {
   async getAllUser() {
     try {
@@ -104,7 +104,7 @@ export class UserService {
       return { response: 'Une erreur c est produite  ', code: 500 }
     }
   }
-  async findTachesToUser(nameOrEmail) {
+  async findTachesToUser(nameOrEmail: string) {
     try {
       const userTachesAll = await User.query()
         .where('email', nameOrEmail)
@@ -120,6 +120,14 @@ export class UserService {
     } catch (error) {
       return { response: error, code: 400 }
     }
+  }
+  async deniedSession(userId: number) {
+    try {
+      const deniedUser = await db.from('auth_access_tokens').where('tokenable_id', userId).delete()
+      return { response: 'Deconnection', data: deniedUser, code: 200 }
+    } catch (error) {
+      return { response: error, code: 403 }
+    } 
   }
 }
 export default UserService

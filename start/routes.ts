@@ -21,6 +21,7 @@ router.get('/', async () => 'Hello wordl!')
 
 router.post('/registerUser', [AuthController, 'register'])
 router.post('/loginUser', [AuthController, 'login'])
+router.delete('/logoutUser', [AuthController, 'logout'])
 
 router
   .group(() => {

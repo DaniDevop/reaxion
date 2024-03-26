@@ -4,8 +4,8 @@ export interface  UserData={
 
   nom:string,
   password:string,
-  role:string,
-  role:string,
+  role :string,
+  role: string,
 
 }
 
@@ -22,6 +22,6 @@ export interface ProjetData={
 
   projet:string,
   etat:string,
- 
+
 }
 
