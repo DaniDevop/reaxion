@@ -1,7 +1,7 @@
 import Projet from '#models/projet'
 import Tache from '#models/tache'
 import { ProjetData } from '../utils/utils.js'
-
+import db from '@adonisjs/lucid/services/db'
 export class ProjetService {
   async createTaches(tachesData: ProjetData) {
     try {
@@ -19,10 +19,14 @@ export class ProjetService {
 
   async getAllProjet() {
     try {
-      const projet = await Projet.all()
+      const projet = await Projet.query().join('taches', 'taches.projet_id', 'projets.id')
+      const projetJson: Projet[] = []
+      projet.forEach((projets) => {
+        projetJson.push(projets)
+      })
       return { data: projet, response: 'Ok ', code: 200 }
     } catch (error) {
-      return { error: error.message, response: 'Error', code: 500 }
+      return { error: error.message, response: 'Error', code: 400 }
     }
   }
 

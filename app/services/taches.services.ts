@@ -1,18 +1,18 @@
 import Tache from '#models/tache'
 import { TachesData } from '../utils/utils.js'
-
+import db from '@adonisjs/lucid/services/db'
 export class TachesServices {
   async createTaches(tachesData: TachesData) {
     try {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { taches, etat, user_id, projet_id } = tachesData
-      const currentTaches = Tache.create({
+      const currentTaches = await Tache.create({
         taches,
         etat,
         user_id,
         projet_id,
       })
-      return { data: currentTaches, response: 'Taches crée avec success', code: 201 }
+      return { data: currentTaches, response: 'Taches crée avec success 🎉', code: 201 }
     } catch (error) {
       return { response: 'Error : ' + error, code: 405 }
     }
@@ -20,10 +20,14 @@ export class TachesServices {
 
   async getAllTaches() {
     try {
-      const taches = await Tache.all()
-      return { data: taches, response: 'Ok ', code: 200 }
+      const query = await db
+        .from('taches')
+        .join('users', 'users.id', '=', 'taches.user_id')
+        .join('projets', 'projets.id', '=', 'taches.projet_id')
+        .orderBy('taches.id', 'desc')
+      return { data: query, response: 'Ok ', code: 200 }
     } catch (error) {
-      return { error: error.message, response: 'Error', code: 500 }
+      return { data: error.message, response: 'Error', code: 400 }
     }
   }
 

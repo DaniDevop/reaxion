@@ -44,7 +44,6 @@ router
     router.delete('/deleteTaches/:id', [TachesController, 'destroy'])
 
     router.post('/userTachesAll', [AuthController, 'findUserByNameOrEmail'])
-
   })
   .use(middleware.auth())
 export default router

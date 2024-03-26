@@ -5,6 +5,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import UserService from '#services/user_service'
 import { inject } from '@adonisjs/core'
 import { UserData } from '../utils/utils.js'
+import Tache from '#models/tache'
 
 @inject()
 export default class UsersController {
@@ -17,11 +18,11 @@ export default class UsersController {
 
   async index({ response }: HttpContext) {
     try {
-      const result = await this.userSservice.getAllUser()
-
-      return response.status(result.code).json({ data: result.data })
+      //const result = await this.userSservice.getAllUser()
+      const resul = await Tache.all()
+      return response.status(200).json({ data: resul })
     } catch (error) {
-      return response.status(200).json({ error: error })
+      return response.status(500).json({ error: error })
     }
   }
 

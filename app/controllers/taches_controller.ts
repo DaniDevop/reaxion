@@ -10,16 +10,15 @@ export default class TachesController {
    * Display a list of resource
    */
 
-
   constructor(private tachesService: TachesServices) {}
   async index({ response }: HttpContext) {
     try {
       const datas = await this.tachesService.getAllTaches()
-      return response.status(datas.code).json({ data: datas.response })
+      return response.status(datas.code).json({ data: datas.data })
     } catch (error) {
       return response.status(500).json({ message: error })
     }
-  }
+  } 
 
   /**
    * Display form to create a new record
@@ -37,7 +36,6 @@ export default class TachesController {
       return response.status(400).json({ message: 'Erreur taches non crée' })
     }
   }
-
 
   async update({ response, request }: HttpContext) {
     try {

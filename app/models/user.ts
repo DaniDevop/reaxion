@@ -1,10 +1,14 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
-import * as relations from '@adonisjs/lucid/types/relations'
+import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+
 import Tache from './tache.js'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
 
 export default class User extends BaseModel {
+  static load(arg0: string) {
+    throw new Error('Method not implemented.')
+  }
   @column({ isPrimary: true })
   declare id: number
 
@@ -22,7 +26,8 @@ export default class User extends BaseModel {
   declare email: string
 
   @column()
-  declare taches: relations.HasMany<typeof Tache>
+  @hasMany(() => Tache)
+  declare taches: HasMany<typeof Tache>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

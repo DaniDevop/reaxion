@@ -1,6 +1,4 @@
 import { UserService } from '#services/user_service'
-import bcrypt from 'bcryptjs'
-import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 
@@ -42,6 +40,8 @@ export default class AuthController {
       return response
         .status(tachesAll.code)
         .json({ message: tachesAll.response, data: tachesAll.data })
-    } catch (error) {}
+    } catch (error) {
+      return response.status(500).json({ message: 'Error controller ' + error.message })
+    }
   }
 }
